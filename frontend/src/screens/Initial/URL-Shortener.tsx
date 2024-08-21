@@ -196,33 +196,26 @@ export default function URLShortener() {
                       {"https://iwncr.online/" + url.idUrl}
                     </TableCell>
                     <TableCell align="right" style={{ padding: 0 }}>
-                      <Tooltip title="Copiar URL encurtada">
-                        <CssButton
-                          startIcon={<ContentCopy />}
-                          onClick={() => {
-                            toast.success(
-                              "URL encurtada copiada com sucesso para area de tansferência!",
-                              {
-                                containerId: "app_root",
-                              }
-                            );
-                            navigator.clipboard.writeText(
-                              "https://iwncr.online/" + url.idUrl
-                            );
-                          }}
-                        />
-                      </Tooltip>
-                      <Tooltip title="Excluir URL encurtada">
-                        <Box
-                          display={"flex"}
-                          width={80}
-                          justifyContent={"center"}
-                          alignItems={"center"}
-                          marginLeft={"0px !important"}
-                        >
-                          {loading ? (
-                            <CircularProgress size={20} />
-                          ) : (
+                      <Box display={"flex"} alignItems={"center"}>
+                        <Tooltip title="Copiar URL encurtada">
+                          <CssButton
+                            startIcon={<ContentCopy />}
+                            onClick={() => {
+                              toast.success(
+                                "URL encurtada copiada com sucesso para area de tansferência!",
+                                {
+                                  containerId: "app_root",
+                                }
+                              );
+                              navigator.clipboard.writeText(
+                                "https://iwncr.online/" + url.idUrl
+                              );
+                            }}
+                          />
+                        </Tooltip>
+                        {loading ? <CircularProgress size={20} /> : null}
+                        {loading ? null : (
+                          <Tooltip title="Excluir URL encurtada">
                             <CssButton
                               startIcon={<Delete color="error" />}
                               onClick={() => {
@@ -232,9 +225,9 @@ export default function URLShortener() {
                                 );
                               }}
                             />
-                          )}
-                        </Box>
-                      </Tooltip>
+                          </Tooltip>
+                        )}
+                      </Box>
                     </TableCell>
                   </TableRow>
                 ))}
