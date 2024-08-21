@@ -213,27 +213,27 @@ export default function URLShortener() {
                         />
                       </Tooltip>
                       <Tooltip title="Excluir URL encurtada">
-                        {loading ? (
-                          <Box
-                            display={"flex"}
-                            width={80}
-                            justifyContent={"center"}
-                            alignItems={"center"}
-                            marginLeft={"0px !important"}
-                          >
+                        <Box
+                          display={"flex"}
+                          width={80}
+                          justifyContent={"center"}
+                          alignItems={"center"}
+                          marginLeft={"0px !important"}
+                        >
+                          {loading ? (
                             <CircularProgress size={20} />
-                          </Box>
-                        ) : (
-                          <CssButton
-                            startIcon={<Delete color="error" />}
-                            onClick={() => {
-                              handleSubmitEraseShortenedURL(
-                                url.idUrl,
-                                userInfo.username
-                              );
-                            }}
-                          />
-                        )}
+                          ) : (
+                            <CssButton
+                              startIcon={<Delete color="error" />}
+                              onClick={() => {
+                                handleSubmitEraseShortenedURL(
+                                  url.idUrl,
+                                  userInfo.username
+                                );
+                              }}
+                            />
+                          )}
+                        </Box>
                       </Tooltip>
                     </TableCell>
                   </TableRow>

@@ -1,6 +1,6 @@
 import React from "react";
 import "./index.css";
-import ReactLogo from "../../assets/react.svg";
+import URLLogo from "../../assets/url.svg";
 import { Box, Button, CircularProgress } from "@mui/material";
 import { SignInDialog, SignUpDialog } from "../../components/Dialogs";
 import { InitialUserInfo, TUserInfo, UserInfoContext } from "../../Contexts";
@@ -40,7 +40,7 @@ export default function FakeLogin() {
           <div className="top_bar">
             <div className="top_bar_left">
               <a href="https://iwncr.online">
-                <img src={ReactLogo} alt="logo_site" />
+                <img src={URLLogo} alt="logo_site" />
               </a>
               <p>Encurtador de URL do Irwyng</p>
             </div>
