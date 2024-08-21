@@ -12,7 +12,7 @@ const nanoid = customAlphabet(
 const app = fastify();
 
 app.register(fastifyCors, {
-  origin: ["http://localhost:5173", "https://iwncr.online/"],
+  origin: true,
   methods: ["GET", "POST"],
 });
 
