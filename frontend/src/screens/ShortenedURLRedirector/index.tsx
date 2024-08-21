@@ -24,7 +24,7 @@ export default function ShortenedURLRedirector() {
           } else {
             if (data.originalUrl.startsWith("http")) {
               setOriginalUrl(data.originalUrl);
-              window.open("http://open.spotify.com", "_blank");
+              window.open(data.originalUrl, "_blank");
             } else if (data.originalUrl.startsWith("www")) {
               setOriginalUrl("http://" + data.originalUrl);
               window.open("http://" + data.originalUrl);
