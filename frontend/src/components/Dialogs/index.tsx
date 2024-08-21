@@ -11,6 +11,8 @@ import {
   Box,
 } from "@mui/material";
 import { UserInfoContext } from "../../Contexts";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export interface SimpleDialogProps {
   open: boolean;
@@ -33,6 +35,9 @@ export function SignInDialog({ onClose, open }: SimpleDialogProps) {
     setLoading(true);
     handleSubmitSignIn(username)
       .then((response) => {
+        toast.success("Usuário logado com sucesso!", {
+          containerId: "app_root",
+        });
         setUserInfo({ logged: true, ...response.data });
         window.localStorage.setItem(
           "user_info",
@@ -43,17 +48,17 @@ export function SignInDialog({ onClose, open }: SimpleDialogProps) {
       })
       .catch((error) => {
         console.error(error);
-        if (
-          error?.response?.data?.message ===
-          "O usuário com esse nome não existe no banco, crie um primeiro e então faça login com o mesmo!"
-        )
-          setUserDoesNotExist(true);
+        if (error?.response?.data?.message === "Usuário não cadastrado!")
+          toast.error(error?.response?.data?.message, {
+            containerId: "sign_in_dialog",
+          });
       })
       .finally(() => setLoading(false));
   };
 
   return (
     <Dialog onClose={handleClose} open={open}>
+      <ToastContainer containerId={"sign_in_dialog"} />
       <DialogTitle>Entre na sua conta!</DialogTitle>
       <DialogContent>
         <DialogContentText>
@@ -74,8 +79,6 @@ export function SignInDialog({ onClose, open }: SimpleDialogProps) {
             if (userDoesNotExist) setUserDoesNotExist(false);
             setUsername(e.target.value);
           }}
-          error={userDoesNotExist}
-          helperText={userDoesNotExist ? "Usuário não cadastrado!" : ""}
         />
       </DialogContent>
       <DialogActions>
@@ -106,7 +109,6 @@ export function SignInDialog({ onClose, open }: SimpleDialogProps) {
 
 export function SignUpDialog({ onClose, open }: SimpleDialogProps) {
   const [username, setUsername] = React.useState("");
-  const [userAlreadyExists, setUserAlreadyExists] = React.useState(false);
   const { handleSubmitSignUp, setLoading, loading, setUserInfo } =
     React.useContext(UserInfoContext);
 
@@ -119,6 +121,10 @@ export function SignUpDialog({ onClose, open }: SimpleDialogProps) {
     setLoading(true);
     handleSubmitSignUp(username)
       .then(({ data: { user } }) => {
+        toast.success(
+          "Usuário criado com sucesso, foi feito um login automático para melhorar sua experiência!",
+          { containerId: "app_root" }
+        );
         setUserInfo({ logged: true, username: user.username, urls: user.urls });
         window.localStorage.setItem(
           "user_info",
@@ -128,22 +134,24 @@ export function SignUpDialog({ onClose, open }: SimpleDialogProps) {
             urls: user.urls,
           })
         );
-        setUserAlreadyExists(false);
         handleClose();
       })
       .catch((error) => {
         console.error(error);
         if (
           error?.response?.data?.message ===
-          "Este nome de usuário já existe em nossos cadastros, faça login ou, se não for você, crie outro com nome diferente!"
+          "Usuário já existente, faça login ou crie outro!"
         )
-          setUserAlreadyExists(true);
+          toast.error("Usuário já existente, faça login ou crie outro!", {
+            containerId: "sign_up_dialog",
+          });
       })
       .finally(() => setLoading(false));
   };
 
   return (
     <Dialog onClose={handleClose} open={open}>
+      <ToastContainer containerId={"sign_up_dialog"} />
       <Box width={500}>
         <DialogTitle>Crie seu Usuário!</DialogTitle>
         <DialogContent>
@@ -157,15 +165,8 @@ export function SignUpDialog({ onClose, open }: SimpleDialogProps) {
             variant="standard"
             value={username}
             onChange={(e) => {
-              if (userAlreadyExists) setUserAlreadyExists(false);
               setUsername(e.target.value);
             }}
-            error={userAlreadyExists}
-            helperText={
-              userAlreadyExists
-                ? "Usuário já cadastrado no sistema, por favor, escolha outro nome!"
-                : ""
-            }
           />
         </DialogContent>
         <DialogActions>

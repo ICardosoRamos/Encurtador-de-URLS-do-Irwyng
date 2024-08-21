@@ -7,7 +7,7 @@ import { TUrl } from "../../Contexts";
 export default function ShortenedURLRedirector() {
   const [isLoading, setIsLoading] = React.useState(true);
   const [originalUrl, setOriginalUrl] = React.useState("");
-  const [errorMessage, setErrorMessage] = React.useState("");
+  const [message, setMessage] = React.useState("");
 
   const params = useParams();
   const axios = useFetch();
@@ -19,25 +19,26 @@ export default function ShortenedURLRedirector() {
           idUrl: params?.idUrl as string,
         })
         .then(({ data }) => {
-          if (data) {
+          if (!data) {
+            setMessage("Esta URL encurtada não existe ainda!");
+          } else {
             if (data.originalUrl.startsWith("http")) {
               setOriginalUrl(data.originalUrl);
               window.open("http://open.spotify.com", "_blank");
             } else if (data.originalUrl.startsWith("www")) {
               setOriginalUrl("http://" + data.originalUrl);
-
               window.open("http://" + data.originalUrl);
             } else if (
               !data.originalUrl.startsWith("http") ||
               !data.originalUrl.startsWith("www")
             ) {
               setOriginalUrl(data.originalUrl);
-              setErrorMessage(
+              setMessage(
                 "URL original inválida, deve começar com 'www' ou 'http'!"
               );
             }
           }
-          setErrorMessage("Esta URL encurtada não existe ainda!");
+
           setIsLoading(false);
         })
         .catch((error) => console.error(error));
@@ -62,9 +63,9 @@ export default function ShortenedURLRedirector() {
           <h3>Procurando URL encurtada e redirecionando...</h3>
           <CircularProgress size={40} />
         </>
-      ) : errorMessage ? (
+      ) : message ? (
         <>
-          <h3>{errorMessage}</h3>
+          <h3>{message}</h3>
           {originalUrl ? (
             <>
               <h3>URL original: {originalUrl}</h3>
@@ -83,14 +84,18 @@ export default function ShortenedURLRedirector() {
       ) : (
         <>
           <h3>URL Encurtada encontrada e redirecionada!</h3>
-          <Button onClick={() => window.open(originalUrl, "_blank")}>
-            Entrar novamente?
+          <Button
+            onClick={() => window.open(originalUrl, "_blank")}
+            color="inherit"
+          >
+            Redirecionar novamente? Clique aqui!
           </Button>
         </>
       )}
       <Button
         onClick={() => window.open("http://iwncr.online/", "_self")}
         variant="contained"
+        style={{ marginTop: "20px" }}
       >
         Ir para página principal
       </Button>

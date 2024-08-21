@@ -16,33 +16,40 @@ import {
 import { ContentCopy } from "@mui/icons-material";
 import { TUrl, UserInfoContext } from "../../Contexts";
 import useFetch from "../../axios";
+import { toast } from "react-toastify";
 
 const CssTextField = styled(TextField)({
   marginTop: 0,
   marginBottom: 0,
   "& label.Mui-focused": {
-    color: "#fff",
+    color: "#1c45e5",
   },
   "& label": {
-    color: "#fff",
+    color: "#1c45e5",
   },
   "& .MuiInput-underline:after": {
-    borderBottomColor: "#B2BAC2",
+    borderBottomColor: "#1c45e5",
   },
   "& .MuiOutlinedInput-root": {
     color: "#fff",
     "& fieldset": {
-      borderColor: "#E0E3E7",
+      borderColor: "#1c45e5",
     },
     "&:hover fieldset": {
-      borderColor: "#B2BAC2",
+      borderColor: "#1c45e5",
     },
     "&.Mui-focused fieldset": {
-      borderColor: "#6F7E8C",
+      borderColor: "#1c45e5",
     },
     "& .MuiInputBase-input": {
-      caretColor: "#fff", // Change cursor color here
+      color: "#000",
     },
+  },
+});
+
+const CssButton = styled(Button)({
+  "& span": {
+    margin: 0,
   },
 });
 
@@ -62,10 +69,17 @@ export default function URLShortener() {
         username: userInfo.username,
       })
       .then((response) => {
+        toast.success("URL encurtada com sucesso!", {
+          containerId: "app_root",
+        });
         setUserInfo((prevState) => ({
           ...prevState,
           urls: response.data.urls,
         }));
+        window.localStorage.setItem(
+          "user_info",
+          JSON.stringify({ ...userInfo, urls: response.data.urls })
+        );
         setUrlToShort("");
       })
       .catch((error) => {
@@ -108,7 +122,7 @@ export default function URLShortener() {
         </Button>
       </Box>
       {userInfo.urls.length ? (
-        <Box>
+        <Box color={"#262323"}>
           <h3>URLS Encurtadas</h3>
           <TableContainer
             component={Paper}
@@ -143,7 +157,20 @@ export default function URLShortener() {
                     </TableCell>
                     <TableCell align="right" style={{ padding: 0 }}>
                       <Tooltip title="Copiar URL encurtada">
-                        <Button startIcon={<ContentCopy />} />
+                        <CssButton
+                          startIcon={<ContentCopy />}
+                          onClick={() => {
+                            toast.success(
+                              "URL encurtada copiada com sucesso para area de tansferência!",
+                              {
+                                containerId: "app_root",
+                              }
+                            );
+                            navigator.clipboard.writeText(
+                              "https://iwncr.online/" + url.idUrl
+                            );
+                          }}
+                        />
                       </Tooltip>
                     </TableCell>
                   </TableRow>
@@ -153,7 +180,7 @@ export default function URLShortener() {
           </TableContainer>
         </Box>
       ) : (
-        <Box>
+        <Box color={"#262323"}>
           <h3>Você ainda não possui URLS encurtadas!</h3>
         </Box>
       )}

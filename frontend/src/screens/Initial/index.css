@@ -1,12 +1,13 @@
 .container {
-    height: 100vh;
+    height: 100%;
+    min-height: 600px;
     display: flex;
     flex-direction: column;
     background-color: #0d365c;
 }
 
 header {
-    height: 10%;
+    background-color: #0d365c;
     
     .grid_container {
         max-width: 1170px;
@@ -59,7 +60,8 @@ header {
 }
 
 main {
-    height: 80%;
+    flex: 1;
+    background-color: #fafafa;
     color: black;
     display: flex;
     justify-content: center;
@@ -68,7 +70,7 @@ main {
 }
 
 footer {
-    height: 10%;
+    background-color: #0d365c;
     display: flex;
     justify-content: center;
     align-items: center;

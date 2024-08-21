@@ -5,6 +5,7 @@ import { Box, Button, CircularProgress } from "@mui/material";
 import { SignInDialog, SignUpDialog } from "../../components/Dialogs";
 import { InitialUserInfo, TUserInfo, UserInfoContext } from "../../Contexts";
 import URLShortener from "./URL-Shortener";
+import { toast } from "react-toastify";
 
 export default function FakeLogin() {
   const { userInfo, setUserInfo } = React.useContext(UserInfoContext);
@@ -48,16 +49,27 @@ export default function FakeLogin() {
                 <div></div>
                 <div>
                   {userInfo?.logged ? (
-                    <Button
-                      onClick={() => {
-                        setUserInfo(InitialUserInfo);
-                        window.localStorage.removeItem("user_info");
-                      }}
-                      variant="contained"
-                      style={{ backgroundColor: "rgb(236, 58, 58)" }}
+                    <Box
+                      display={"flex"}
+                      flexDirection={"row"}
+                      alignItems={"baseline"}
+                      gap={2}
                     >
-                      Sair
-                    </Button>
+                      <h3>Bem Vindo, {userInfo.username}</h3>
+                      <Button
+                        onClick={() => {
+                          toast.success("Saiu da conta com sucesso!", {
+                            containerId: "app_root",
+                          });
+                          setUserInfo(InitialUserInfo);
+                          window.localStorage.removeItem("user_info");
+                        }}
+                        variant="contained"
+                        style={{ backgroundColor: "rgb(236, 58, 58)" }}
+                      >
+                        Sair
+                      </Button>
+                    </Box>
                   ) : null}
 
                   {!userInfo?.logged ? (
@@ -88,7 +100,13 @@ export default function FakeLogin() {
             <CircularProgress size={40} color="inherit" />
           </Box>
         ) : (
-          <>{userInfo?.logged ? <URLShortener /> : <p>Não está logado!</p>}</>
+          <Box color={"#262323"}>
+            {userInfo?.logged ? (
+              <URLShortener />
+            ) : (
+              <p>Entre na sua conta para continuar!</p>
+            )}
+          </Box>
         )}
       </main>
       <SignInDialog
@@ -99,7 +117,9 @@ export default function FakeLogin() {
         open={openedSignUpDialog}
         onClose={() => setOpenedSignUpDialog(false)}
       />
-      <footer>@copyright Irwyng Cardoso Ramos!</footer>
+      <footer>
+        <p>@copyright Irwyng Cardoso Ramos!</p>
+      </footer>
     </div>
   );
 }

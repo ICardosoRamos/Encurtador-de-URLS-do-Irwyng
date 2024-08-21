@@ -19,11 +19,9 @@ app.register(fastifyCors, {
 const prisma = new PrismaClient();
 
 const ERROR_MESSAGES = {
-  user_exists:
-    "Este nome de usuário já existe em nossos cadastros, faça login ou, se não for você, crie outro com nome diferente!",
+  user_exists: "Usuário já existente, faça login ou crie outro!",
   username_is_empty: "Campo nome de usuário não informado!",
-  user_dont_exists:
-    "O usuário com esse nome não existe no banco, crie um primeiro e então faça login com o mesmo!",
+  user_dont_exists: "Usuário não cadastrado!",
   fields_not_informed:
     "Campos obrigatporios não informados, por favor, informe-os, se o erro persistir contate o suporte!",
   id_url_is_empty: "Campo idUrl não informado!, ",
