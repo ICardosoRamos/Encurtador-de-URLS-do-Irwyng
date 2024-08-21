@@ -14,7 +14,7 @@ import {
   TextField,
   Tooltip,
 } from "@mui/material";
-import { ContentCopy } from "@mui/icons-material";
+import { ContentCopy, Delete } from "@mui/icons-material";
 import { TUrl, UserInfoContext } from "../../Contexts";
 import useFetch from "../../axios";
 import { toast } from "react-toastify";
@@ -91,6 +91,28 @@ export default function URLShortener() {
       .finally(() => setLoading(false));
   };
 
+  const handleSubmitEraseShortenedURL = (urlId: string, username: string) => {
+    axios
+      .delete_record<
+        { idUrl: string; username: string },
+        { data: { urls: TUrl[]; message: string } }
+      >("urls", { idUrl: urlId, username: username })
+      .then(({ data }) => {
+        toast.success("URL excluída com sucesso!", {
+          containerId: "app_root",
+        });
+        setUserInfo((prevState) => ({
+          ...prevState,
+          urls: data.urls,
+        }));
+        window.localStorage.setItem(
+          "user_info",
+          JSON.stringify({ ...userInfo, urls: data.urls })
+        );
+      })
+      .catch((error) => console.error(error));
+  };
+
   return (
     <Box
       display={"flex"}
@@ -150,7 +172,7 @@ export default function URLShortener() {
                   <TableCell>ID</TableCell>
                   <TableCell align="left">URL Original</TableCell>
                   <TableCell align="left">URL Encurtada</TableCell>
-                  <TableCell align="right">Ações</TableCell>
+                  <TableCell align="center">Ações</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -184,6 +206,17 @@ export default function URLShortener() {
                             );
                             navigator.clipboard.writeText(
                               "https://iwncr.online/" + url.idUrl
+                            );
+                          }}
+                        />
+                      </Tooltip>
+                      <Tooltip title="Excluir URL encurtada">
+                        <CssButton
+                          startIcon={<Delete color="error" />}
+                          onClick={() => {
+                            handleSubmitEraseShortenedURL(
+                              url.idUrl,
+                              userInfo.username
                             );
                           }}
                         />

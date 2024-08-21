@@ -13,7 +13,7 @@ const app = fastify();
 
 app.register(fastifyCors, {
   origin: true,
-  methods: ["GET", "POST"],
+  methods: ["GET", "POST", "DELETE"],
 });
 
 const prisma = new PrismaClient();
@@ -227,6 +227,45 @@ app.post("/urls", async (request, reply) => {
     return reply.status(201).send({
       urls: urls,
       message: "URL encurtada com sucesso!",
+    });
+  } catch (error) {
+    console.error(error);
+    return reply.status(500).send(error);
+  }
+});
+
+app.delete("/urls", async (request, reply) => {
+  try {
+    const createUrlSchema = z.object({
+      idUrl: z.string(),
+      username: z.string(),
+    });
+
+    const { idUrl, username } = createUrlSchema.parse(request.body);
+
+    if (!username || !idUrl) {
+      return reply.status(400).send({
+        message: ERROR_MESSAGES["fields_not_informed"],
+      });
+    }
+
+    const user = await verifyUser(username);
+
+    if (!user) {
+      return reply.status(404).send({
+        message: ERROR_MESSAGES["user_dont_exists"],
+      });
+    }
+
+    await prisma.url.delete({ where: { userId: user.id, idUrl: idUrl } });
+
+    const urls = (await prisma.url.findMany()).filter(
+      (url) => url.userId === user?.id
+    );
+
+    return reply.status(201).send({
+      urls: urls,
+      message: "URL excluída com sucesso!",
     });
   } catch (error) {
     console.error(error);

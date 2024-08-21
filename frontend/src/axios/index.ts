@@ -37,5 +37,24 @@ export default function useFetch() {
     }) as TReturn;
   }
 
-  return { get, post };
+  async function delete_record<TRequestData = unknown, TReturn = unknown>(
+    url: string,
+    requestData?: TRequestData
+  ) {
+    return new Promise((resolve, reject) => {
+      axios
+        .delete(url, {
+          data: requestData,
+        })
+        .then((response) => {
+          resolve(response);
+        })
+        .catch((error) => {
+          console.error(error);
+          reject(error);
+        });
+    }) as TReturn;
+  }
+
+  return { get, post, delete_record };
 }
