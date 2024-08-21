@@ -2,6 +2,7 @@ import React from "react";
 import {
   Box,
   Button,
+  CircularProgress,
   Paper,
   styled,
   Table,
@@ -55,11 +56,13 @@ const CssButton = styled(Button)({
 
 export default function URLShortener() {
   const [urlToShort, setUrlToShort] = React.useState("");
-  const { userInfo, setUserInfo } = React.useContext(UserInfoContext);
+  const { userInfo, setUserInfo, loading, setLoading } =
+    React.useContext(UserInfoContext);
   const axios = useFetch();
 
   const handleSubmitShortUrl = () => {
     if (!urlToShort) return;
+    setLoading(true);
     axios
       .post<
         { originalUrl: string; username: string },
@@ -84,7 +87,8 @@ export default function URLShortener() {
       })
       .catch((error) => {
         console.error(error);
-      });
+      })
+      .finally(() => setLoading(false));
   };
 
   return (
@@ -109,17 +113,29 @@ export default function URLShortener() {
             setUrlToShort(e.target.value);
           }}
         />
-        <Button
-          onClick={() => handleSubmitShortUrl()}
-          style={{ height: "inherit", width: 180 }}
-          size="small"
-          variant="contained"
-          disabled={!urlToShort}
-        >
-          <p style={{ color: !urlToShort ? "#747474" : "inherit" }}>
-            Encurtar URL
-          </p>
-        </Button>
+        {loading ? (
+          <Box
+            display={"flex"}
+            width={80}
+            justifyContent={"center"}
+            alignItems={"center"}
+            marginLeft={"0px !important"}
+          >
+            <CircularProgress size={20} />
+          </Box>
+        ) : (
+          <Button
+            onClick={() => handleSubmitShortUrl()}
+            style={{ height: "inherit", width: 180 }}
+            size="small"
+            variant="contained"
+            disabled={!urlToShort}
+          >
+            <p style={{ color: !urlToShort ? "#747474" : "inherit" }}>
+              Encurtar URL
+            </p>
+          </Button>
+        )}
       </Box>
       {userInfo.urls.length ? (
         <Box color={"#262323"}>
