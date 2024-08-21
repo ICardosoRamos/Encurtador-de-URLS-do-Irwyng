@@ -19,27 +19,25 @@ export default function ShortenedURLRedirector() {
           idUrl: params?.idUrl as string,
         })
         .then(({ data }) => {
-          if (data.originalUrl.startsWith("http")) {
-            setOriginalUrl(data.originalUrl);
-            window.open("http://open.spotify.com", "_blank");
+          if (data) {
+            if (data.originalUrl.startsWith("http")) {
+              setOriginalUrl(data.originalUrl);
+              window.open("http://open.spotify.com", "_blank");
+            } else if (data.originalUrl.startsWith("www")) {
+              setOriginalUrl("http://" + data.originalUrl);
+
+              window.open("http://" + data.originalUrl);
+            } else if (
+              !data.originalUrl.startsWith("http") ||
+              !data.originalUrl.startsWith("www")
+            ) {
+              setOriginalUrl(data.originalUrl);
+              setErrorMessage(
+                "URL original inválida, deve começar com 'www' ou 'http'!"
+              );
+            }
           }
-
-          if (data.originalUrl.startsWith("www")) {
-            setOriginalUrl("http://" + data.originalUrl);
-
-            window.open("http://" + data.originalUrl);
-          }
-
-          if (
-            !data.originalUrl.startsWith("http") ||
-            !data.originalUrl.startsWith("www")
-          ) {
-            setOriginalUrl(data.originalUrl);
-            setErrorMessage(
-              "URL original inválida, deve começar com 'www' ou 'http'!"
-            );
-          }
-
+          setErrorMessage("Esta URL encurtada não existe ainda!");
           setIsLoading(false);
         })
         .catch((error) => console.error(error));
@@ -67,11 +65,20 @@ export default function ShortenedURLRedirector() {
       ) : errorMessage ? (
         <>
           <h3>{errorMessage}</h3>
-          <h3>URL original: {originalUrl}</h3>
-          <h4>
-            É necessário encurtar a URL novamente entrando na página principal e
-            fazendo login!
-          </h4>
+          {originalUrl ? (
+            <>
+              <h3>URL original: {originalUrl}</h3>
+              <h4>
+                É necessário encurtar a URL novamente entrando na página
+                principal e fazendo login!
+              </h4>
+            </>
+          ) : (
+            <h3>
+              Entre na página principal, faça login e então comece a encurtar
+              suas URLS!
+            </h3>
+          )}
         </>
       ) : (
         <>
