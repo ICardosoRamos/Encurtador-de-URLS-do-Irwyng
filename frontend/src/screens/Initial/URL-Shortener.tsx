@@ -92,6 +92,7 @@ export default function URLShortener() {
   };
 
   const handleSubmitEraseShortenedURL = (urlId: string, username: string) => {
+    setLoading(true);
     axios
       .delete_record<
         { idUrl: string; username: string },
@@ -110,7 +111,8 @@ export default function URLShortener() {
           JSON.stringify({ ...userInfo, urls: data.urls })
         );
       })
-      .catch((error) => console.error(error));
+      .catch((error) => console.error(error))
+      .finally(() => setLoading(false));
   };
 
   return (
@@ -211,15 +213,27 @@ export default function URLShortener() {
                         />
                       </Tooltip>
                       <Tooltip title="Excluir URL encurtada">
-                        <CssButton
-                          startIcon={<Delete color="error" />}
-                          onClick={() => {
-                            handleSubmitEraseShortenedURL(
-                              url.idUrl,
-                              userInfo.username
-                            );
-                          }}
-                        />
+                        {loading ? (
+                          <Box
+                            display={"flex"}
+                            width={80}
+                            justifyContent={"center"}
+                            alignItems={"center"}
+                            marginLeft={"0px !important"}
+                          >
+                            <CircularProgress size={20} />
+                          </Box>
+                        ) : (
+                          <CssButton
+                            startIcon={<Delete color="error" />}
+                            onClick={() => {
+                              handleSubmitEraseShortenedURL(
+                                url.idUrl,
+                                userInfo.username
+                              );
+                            }}
+                          />
+                        )}
                       </Tooltip>
                     </TableCell>
                   </TableRow>
