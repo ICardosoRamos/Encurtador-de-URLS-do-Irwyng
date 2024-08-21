@@ -16,8 +16,16 @@ datasource db {
 model Url {
   id          Int      @id @default(autoincrement())
   originalUrl String
-  shortUrl    String   @unique
+  idUrl       String   @unique @default("")
   createdAt   DateTime @default(now())
+  userId      Int
+  user        User     @relation(fields: [userId], references: [id])
 
   @@map("urls")
+}
+
+model User {
+  id       Int    @id @default(autoincrement())
+  username String @unique
+  urls     Url[]
 }
