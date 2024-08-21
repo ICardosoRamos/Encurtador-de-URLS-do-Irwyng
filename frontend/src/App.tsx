@@ -10,7 +10,7 @@ const router = createBrowserRouter([
     element: <FakeLogin />,
   },
   {
-    path: ":idUrl",
+    path: "/:idUrl",
     element: <ShortenedURLRedirector />,
   },
 ]);
