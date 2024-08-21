@@ -124,13 +124,13 @@ export default function URLShortener() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {userInfo.urls.map((url) => (
+                {userInfo.urls.map((url, index) => (
                   <TableRow
                     key={url.idUrl}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
                     <TableCell component="th" scope="row">
-                      {url.id}
+                      {index + 1}
                     </TableCell>
                     <TableCell
                       align="left"

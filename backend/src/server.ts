@@ -26,6 +26,7 @@ const ERROR_MESSAGES = {
     "O usuário com esse nome não existe no banco, crie um primeiro e então faça login com o mesmo!",
   fields_not_informed:
     "Campos obrigatporios não informados, por favor, informe-os, se o erro persistir contate o suporte!",
+  id_url_is_empty: "Campo idUrl não informado!, ",
 };
 
 async function verifyUser(username: string) {
@@ -147,34 +148,24 @@ app.post("/users", async (request, reply) => {
   }
 });
 
-// AQUI SÃO RETORNADAS TODAS AS URLS DE UM USUÁRIO ESPECÍFICO.
+// AQUI É RETORNADA A URL ENCURTADA QUANDO O USUÁRIO TENTA ACESSAR A MESMA.
 app.get("/urls", async (request, reply) => {
   try {
     const createUserSchema = z.object({
-      username: z.string(),
+      idUrl: z.string(),
     });
 
-    const { username } = createUserSchema.parse(request.query);
+    const { idUrl } = createUserSchema.parse(request.query);
 
-    if (!username) {
+    if (!idUrl) {
       return reply.status(400).send({
-        message: ERROR_MESSAGES["username_is_empty"],
+        message: ERROR_MESSAGES["id_url_is_empty"],
       });
     }
 
-    const user = await verifyUser(username);
+    const url = await prisma.url.findUnique({ where: { idUrl } });
 
-    if (!user) {
-      return reply.status(404).send({
-        message: ERROR_MESSAGES["user_dont_exists"],
-      });
-    }
-
-    const urls = (await prisma.url.findMany()).filter(
-      (url) => url.userId === user?.id
-    );
-
-    return reply.status(200).send(urls);
+    return reply.status(200).send(url);
   } catch (error) {
     console.error(error);
     return reply.status(500).send(error);

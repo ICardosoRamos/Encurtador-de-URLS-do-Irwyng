@@ -3,9 +3,9 @@ import axios from "axios";
 axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL;
 
 export default function useFetch() {
-  async function get<TRequestData = unknown, TReturn = unknown>(
+  async function get<TRequestParams = unknown, TReturn = unknown>(
     url: string,
-    requestParams?: TRequestData
+    requestParams?: TRequestParams
   ) {
     return new Promise((resolve, reject) => {
       axios

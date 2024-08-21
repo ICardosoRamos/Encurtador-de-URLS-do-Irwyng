@@ -7,7 +7,6 @@
 
 header {
     height: 10%;
-    /* background-color: aliceblue; */
     
     .grid_container {
         max-width: 1170px;
@@ -16,7 +15,6 @@ header {
         margin: 0 auto;
         padding: 0;
         box-sizing: inherit;
-        /* background-color: brown; */
 
         .top_bar {
             display: flex;
@@ -46,7 +44,6 @@ header {
             .top_bar_right {
                 display: flex;
                 flex: 4;
-                /* background-color: brown; */
                 max-width: 100%;
                 margin-right: auto;
                 float: left !important;
@@ -63,7 +60,6 @@ header {
 
 main {
     height: 80%;
-    /* background-color: aqua; */
     color: black;
     display: flex;
     justify-content: center;
